@@ -27,7 +27,7 @@ public class Chat extends JFrame {
     private JTextArea currentUser;
     ChatHistory chatHistory;
     private MassageConsumer massageConsumer;
-   private MassageProducer massageProducer;
+    private MassageProducer massageProducer;
     private String topic;
     private String id;
     private static Chat originalChatInstance;
@@ -72,6 +72,7 @@ public class Chat extends JFrame {
         this.setTitle(topic);
         currentUser.setText("Current User: "+id);
         this.pack();
+
         scrollPane2.add(loginList);
         scrollPane2.setViewportView(loginList);
         scrollPane2.setVisible(true);
@@ -98,6 +99,7 @@ public class Chat extends JFrame {
         });
     }
 
+
     private void sendMessage() {
         String message = textField1.getText()+"\n";
         String timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -105,7 +107,9 @@ public class Chat extends JFrame {
 //            MassageProducer.send(new ProducerRecord<>(topic, message));
 //        }
         massageProducer.send(new ProducerRecord<>(topic, id," [" + timestamp + "] : "+ message));
-//        updateChatView(id + " : " + message);
+//        updateChatView(id + " [" + timestamp + "] : "+ message + "\n");
+//        chatView.append(" [" + timestamp + "] : "+ message);
+        chatHistory.addMessage(id," [" + timestamp + "] : "+ message);
         textField1.setText("");
     }
 
@@ -122,13 +126,13 @@ public class Chat extends JFrame {
             Chat chat = new Chat(newId, topic);
             chat.setTitle(newId);
             chat.updateChatView(newId + " : logged in");
-            for (int i=0;i<listModel.size();i++) {
-                listModel.addElement(listModel.get(i));
-            }
+//            for (int i=0;i<listModel.size();i++) {
+//                listModel.addElement(listModel.get(i));
+//            }
             listModel.addElement("User: "+newId);
 
 //            massageConsumer = new MassageConsumer(topic, newId,this::updateChatView);
-            startConsumer();
+//            startConsumer();
 
         }
     }

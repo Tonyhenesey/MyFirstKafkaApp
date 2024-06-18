@@ -22,7 +22,7 @@ public class MassageConsumer {
                 Map.of(
                         ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092",
                         ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName(),
-                        ConsumerConfig.GROUP_ID_CONFIG, id,
+                        ConsumerConfig.GROUP_ID_CONFIG, id + "-" + System.currentTimeMillis(), // Unique group ID
                         ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName(),
                         ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
                         ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true"
@@ -34,8 +34,9 @@ public class MassageConsumer {
     public void pollMessages() {
         ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofSeconds(1));
         for (ConsumerRecord<String, String> record : records) {
-            messageCallback.accept("\n"+record.key() + " : " + record.value());
+            messageCallback.accept("\n" + record.key() + " : " + record.value());
         }
+        kafkaConsumer.commitSync(); // Commit offset after processing messages
     }
 
     public void close() {
