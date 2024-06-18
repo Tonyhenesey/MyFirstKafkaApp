@@ -5,6 +5,9 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -72,6 +75,15 @@ public class Chat extends JFrame {
         scrollPane2.add(loginList);
         scrollPane2.setViewportView(loginList);
         scrollPane2.setVisible(true);
+        KeyListener keyListener = new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                if (keyCode == KeyEvent.VK_ENTER) {
+                    sendMessage();
+                }
+            }
+        };
 
     }
 
